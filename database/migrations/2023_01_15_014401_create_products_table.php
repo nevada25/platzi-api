@@ -12,10 +12,15 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::create('products', function (Blueprint $table) {
+        $user = \App\Models\User::factory([
+            "name" => "Administrador"
+        ])->create();
+        Schema::create('products', function (Blueprint $table) use ($user) {
             $table->id();
             $table->string('name');
             $table->float('price');
+            $table->unsignedBigInteger('created_by')->default($user->id);
+            $table->foreign('created_by')->references('id')->on('users');
             $table->timestamps();
         });
     }
